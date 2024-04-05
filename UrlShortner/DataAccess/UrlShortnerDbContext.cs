@@ -1,4 +1,6 @@
-﻿namespace UrlShortner.Shorten;
+﻿using UrlShortner.Settings;
+
+namespace UrlShortner.DataAccess;
 
 public class UrlShortnerDbContext : DbContext
 {

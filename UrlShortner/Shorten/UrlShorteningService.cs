@@ -1,4 +1,7 @@
-﻿namespace UrlShortner;
+﻿using UrlShortner.DataAccess;
+using UrlShortner.Settings;
+
+namespace UrlShortner.Shorten;
 
 public class UrlShorteningService : IUrlShorteningService
 {

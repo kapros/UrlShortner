@@ -1,4 +1,4 @@
-﻿namespace UrlShortner;
+﻿namespace UrlShortner.Settings;
 
 public static class ShortUrlSettings
 {

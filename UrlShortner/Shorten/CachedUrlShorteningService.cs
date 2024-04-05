@@ -1,7 +1,8 @@
 ﻿
 using Microsoft.Extensions.Caching.Memory;
+using UrlShortner.DataAccess;
 
-namespace UrlShortner;
+namespace UrlShortner.Shorten;
 
 public class CachedUrlShorteningService : IUrlShorteningService
 {

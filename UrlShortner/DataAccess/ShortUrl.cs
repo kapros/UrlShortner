@@ -1,4 +1,4 @@
-﻿namespace UrlShortner;
+﻿namespace UrlShortner.DataAccess;
 
 public class ShortUrl
 {

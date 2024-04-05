@@ -1,4 +1,7 @@
 using Microsoft.Extensions.Caching.Memory;
+using UrlShortner.Common;
+using UrlShortner.DataAccess;
+using UrlShortner.Shorten;
 
 var builder = WebApplication.CreateBuilder(args);
 

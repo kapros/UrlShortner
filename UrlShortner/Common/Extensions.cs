@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using UrlShortner.DataAccess;
+using UrlShortner.Shorten;
 
-namespace UrlShortner;
+namespace UrlShortner.Common;
 
 public static class Extensions
 {
