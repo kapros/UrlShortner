@@ -1,4 +1,4 @@
-﻿namespace UrlShortner;
+﻿namespace UrlShortner.Shorten;
 
 public interface IRandomizer
 {
