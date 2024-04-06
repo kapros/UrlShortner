@@ -14,7 +14,7 @@ if (builder.Environment.IsDevelopment())
     builder.RegisterDevDependencies();
 }
 
-builder.RegisteUrlServices();
+builder.RegisterUrlServices();
 
 builder.Services.AddCors();
 builder.Configuration.AddEnvironmentVariables();
