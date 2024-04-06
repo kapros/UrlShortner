@@ -18,7 +18,7 @@ public class CachedUrlShorteningService : IUrlShorteningService
     public async Task<ShortUrl> ShortenUrl(string urlToShorten, HttpRequest httpRequest) 
     { 
         var shortUrl = await _decorated.ShortenUrl(urlToShorten, httpRequest);
-        _memoryCache.Set(shortUrl.Code.code, shortUrl.Short);
+        _memoryCache.Set(shortUrl.Code.code, shortUrl.Long);
         return shortUrl;
     }
 
