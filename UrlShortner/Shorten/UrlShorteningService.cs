@@ -58,4 +58,14 @@ public class UrlShorteningService : IUrlShorteningService
             .SingleOrDefaultAsync(s => s.Code == code);
         return result?.Long;
     }
+
+    public async Task DeleteShortUrl(Code code)
+    {
+        var entity = await _dbContext.ShortenedUrls.SingleOrDefaultAsync(x => x.Code == code);
+        if (entity is not null)
+        {
+            _dbContext.Remove(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+    }
 }

@@ -32,4 +32,14 @@ public class CachedUrlShorteningService : IUrlShorteningService
             return _decorated.GetUrlFromCode(code);
         });
     }
+
+    public async Task DeleteShortUrl(Code code)
+    {
+        try
+        {
+            await _decorated.DeleteShortUrl(code);
+            _memoryCache.Remove(code);
+        }
+        catch { }
+    }
 }

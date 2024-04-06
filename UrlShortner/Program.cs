@@ -1,5 +1,9 @@
 // based on https://www.milanjovanovic.tech/blog/how-to-build-a-url-shortener-with-dotnet
 
+using Microsoft.AspNetCore.Http;
+using UrlShortner.DataAccess;
+using UrlShortner.Shorten;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
@@ -28,6 +32,21 @@ app.MapPost("shorten", EndpointHandlers.CreateShortLink())
 
 app.MapGet("{code}", EndpointHandlers.GetByCode())
 .WithName("get")
+.WithOpenApi();
+
+app.MapDelete("{code}", async (Code code,
+            IUrlShorteningService urlShorteningService) =>
+{
+    if (string.IsNullOrWhiteSpace((await urlShorteningService.GetUrlFromCode(code))))
+    {
+        return Results.NotFound();
+    }
+
+    await urlShorteningService.DeleteShortUrl(code);
+
+    return Results.NoContent();
+})
+.WithName("delete")
 .WithOpenApi();
 
 app.Run();
