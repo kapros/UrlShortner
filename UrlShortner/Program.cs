@@ -29,18 +29,7 @@ app.MapGet("{code}", EndpointHandlers.GetByCode())
 .WithName("get")
 .WithOpenApi();
 
-app.MapDelete("{code}", async (Code code,
-            IUrlShorteningService urlShorteningService) =>
-{
-    if (string.IsNullOrWhiteSpace((await urlShorteningService.GetUrlFromCode(code))))
-    {
-        return Results.NotFound();
-    }
-
-    await urlShorteningService.DeleteShortUrl(code);
-
-    return Results.NoContent();
-})
+app.MapDelete("{code}", EndpointHandlers.DeleteByCode())
 .WithName("delete")
 .WithOpenApi();
 

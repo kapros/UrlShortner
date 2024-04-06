@@ -38,4 +38,21 @@ public static class EndpointHandlers
             return Results.Redirect(shortenedUrl);
         };
     }
+
+    public static Func<Code, IUrlShorteningService, Task<IResult>> DeleteByCode()
+{
+        return async (Code code,
+                    IUrlShorteningService urlShorteningService) =>
+        {
+            if (string.IsNullOrWhiteSpace((await urlShorteningService.GetUrlFromCode(code))))
+            {
+                return Results.NotFound();
+            }
+
+            await urlShorteningService.DeleteShortUrl(code);
+
+            return Results.NoContent();
+        };
+    }
+
 }
