@@ -1,7 +1,4 @@
-﻿using UrlShortner.DataAccess;
-using UrlShortner.Settings;
-
-namespace UrlShortner.Shorten;
+﻿namespace UrlShortner.Shorten;
 
 public class UrlShorteningService : IUrlShorteningService
 {
@@ -12,6 +9,23 @@ public class UrlShorteningService : IUrlShorteningService
     {
         _dbContext = dbContext;
         _randomizer = randomizer;
+    }
+
+    public async Task<ShortUrl> ShortenUrl(string urlToShorten, HttpRequest httpRequest)
+    {
+        var code = await GenerateUniqueCode();
+        var shortenedUrl = new ShortUrl
+        {
+            Id = Guid.NewGuid(),
+            Long = urlToShorten,
+            Code = code,
+            Short = $"{httpRequest.Scheme}://{httpRequest.Host}/{code}",
+            CreatedOnUtc = DateTime.UtcNow
+        };
+        _dbContext.ShortenedUrls.Add(shortenedUrl);
+
+        await _dbContext.SaveChangesAsync();
+        return shortenedUrl;
     }
 
     public async Task<Code> GenerateUniqueCode()

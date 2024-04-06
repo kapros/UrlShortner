@@ -17,22 +17,8 @@ public static class EndpointHandlers
                 return Results.BadRequest("The specified URL is invalid.");
             }
 
-            var code = await urlShorteningService.GenerateUniqueCode();
+            var shortenedUrl = await urlShorteningService.ShortenUrl(request.Url, httpContext.Request);
 
-            var httpRequest = httpContext.Request;
-
-            var shortenedUrl = new ShortUrl
-            {
-                Id = Guid.NewGuid(),
-                Long = request.Url,
-                Code = code,
-                Short = $"{httpRequest.Scheme}://{httpRequest.Host}/{code}",
-                CreatedOnUtc = DateTime.UtcNow
-            };
-            // TODO: move to service
-            dbContext.ShortenedUrls.Add(shortenedUrl);
-
-            await dbContext.SaveChangesAsync();
 
             return Results.Ok(new { ShortUrl = shortenedUrl.Short });
         };
