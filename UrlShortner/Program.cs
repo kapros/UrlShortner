@@ -31,18 +31,7 @@ app.MapPost("shorten", EndpointHandlers.CreateShortLink())
 .WithName("create")
 .WithOpenApi();
 
-app.MapGet("{code}", async (Code code,
-    IUrlShorteningService urlShorteningService) =>
-{
-    var shortenedUrl = await urlShorteningService.GetUrlFromCode(code);
-
-    if (shortenedUrl is null)
-    {
-        return Results.NotFound();
-    }
-
-    return Results.Redirect(shortenedUrl);
-})
+app.MapGet("{code}", EndpointHandlers.GetByCode())
 .WithName("get")
 .WithOpenApi();
 

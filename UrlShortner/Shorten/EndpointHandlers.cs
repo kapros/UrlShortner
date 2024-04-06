@@ -38,5 +38,19 @@ public static class EndpointHandlers
         };
     }
 
+    public static Func<Code, IUrlShorteningService, Task<IResult>> GetByCode()
+    {
+        return async (Code code,
+            IUrlShorteningService urlShorteningService) =>
+        {
+            var shortenedUrl = await urlShorteningService.GetUrlFromCode(code);
 
+            if (shortenedUrl is null)
+            {
+                return Results.NotFound();
+            }
+
+            return Results.Redirect(shortenedUrl);
+        };
+    }
 }
