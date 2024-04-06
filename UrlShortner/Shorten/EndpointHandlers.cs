@@ -4,12 +4,11 @@ namespace UrlShortner.Shorten;
 
 public static class EndpointHandlers
 {
-    public static Func<ShortenUrlRequest, IUrlShorteningService, UrlShortnerDbContext, HttpContext, Task<IResult>> CreateShortLink()
+    public static Func<ShortenUrlRequest, IUrlShorteningService, HttpContext, Task<IResult>> CreateShortLink()
     {
         return async (
             ShortenUrlRequest request,
             IUrlShorteningService urlShorteningService,
-            UrlShortnerDbContext dbContext,
             HttpContext httpContext) =>
         {
             if (!Uri.TryCreate(request.Url, UriKind.Absolute, out _))
