@@ -1,9 +1,4 @@
 // based on https://www.milanjovanovic.tech/blog/how-to-build-a-url-shortener-with-dotnet
-
-using Microsoft.AspNetCore.Http;
-using UrlShortner.DataAccess;
-using UrlShortner.Shorten;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
@@ -50,3 +45,12 @@ app.MapDelete("{code}", async (Code code,
 .WithOpenApi();
 
 app.Run();
+
+
+namespace UrlShortner
+{
+    public partial class Program
+    {
+        // Expose the Program class for use with WebApplicationFactory<T>
+    }
+}

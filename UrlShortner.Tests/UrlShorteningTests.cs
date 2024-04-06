@@ -1,30 +1,41 @@
-﻿using System.Net.Http.Json;
+﻿using System.Dynamic;
+using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
+using Newtonsoft.Json;
+using UrlShortner.DataAccess;
 
 namespace UrlShortner.Tests;
 public class UrlShorteningTests
-    : IClassFixture<WebApplicationFactory<Program>>
+    : IClassFixture<CustomWebApplicationFactory<Program>>
 {
-    private readonly WebApplicationFactory<Program> _factory;
+    private readonly CustomWebApplicationFactory<Program> _factory;
 
-    public UrlShorteningTests(WebApplicationFactory<Program> factory)
+    public UrlShorteningTests(CustomWebApplicationFactory<Program> factory)
     {
         _factory = factory;
+
+        using (var scope = factory.Server.Services.CreateScope())
+        {
+            var scopedServices = scope.ServiceProvider;
+            var dbContext = scopedServices.GetRequiredService<UrlShortnerDbContext>();
+
+            dbContext.Database.EnsureCreated();
+        }
     }
 
     [Fact]
     public async Task PostCreatesShortUrl()
     {
-        // Arrange
         var client = _factory.CreateClient();
 
-        // Act
-        var response = await client.PostAsync("/shorten", JsonContent.Create(new { url = "https://test.com"}));
+        var response = await client.PostAsync("shorten", JsonContent.Create(new { url = "https://test.com"}));
 
-        // Assert
-        response.EnsureSuccessStatusCode(); 
+        var content = await response.Content.ReadAsStringAsync() ?? "";
+        string shortUrl = JsonConvert.DeserializeObject<dynamic>(content).shortUrl;
+        Assert.NotEqual(shortUrl, "https://test.com");
+        Assert.True(shortUrl.Contains( "localhost"));
     }
 }
-
-//https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-8.0
