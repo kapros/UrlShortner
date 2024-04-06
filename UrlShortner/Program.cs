@@ -1,10 +1,5 @@
 // based on https://www.milanjovanovic.tech/blog/how-to-build-a-url-shortener-with-dotnet
 
-using Microsoft.Extensions.Caching.Memory;
-using UrlShortner.Common;
-using UrlShortner.DataAccess;
-using UrlShortner.Shorten;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
