@@ -18,7 +18,7 @@ public class CachedUrlShorteningService : IUrlShorteningService
     public async Task<ShortUrl> ShortenUrl(string urlToShorten, HttpRequest httpRequest) 
     { 
         var shortUrl = await _decorated.ShortenUrl(urlToShorten, httpRequest);
-        _memoryCache.Set(shortUrl.Code, shortUrl);
+        _memoryCache.Set(shortUrl.Code.code, shortUrl.Short);
         return shortUrl;
     }
 
@@ -26,7 +26,7 @@ public class CachedUrlShorteningService : IUrlShorteningService
 
     public Task<string?> GetUrlFromCode(Code code)
     {
-        return _memoryCache.GetOrCreateAsync(code, entry =>
+        return _memoryCache.GetOrCreateAsync(code.code, entry =>
         {
             entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30);
             return _decorated.GetUrlFromCode(code);
