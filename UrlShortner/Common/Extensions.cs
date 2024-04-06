@@ -13,7 +13,7 @@ public static class Extensions
         builder.Services.AddMemoryCache();
     }
 
-    public static void RegisteUrlrServices(this WebApplicationBuilder builder)
+    public static void RegisteUrlServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddSingleton<IRandomizer, Randomizer>();
         builder.Services.AddScoped<UrlShorteningService>();

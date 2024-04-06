@@ -1,3 +1,5 @@
+// based on https://www.milanjovanovic.tech/blog/how-to-build-a-url-shortener-with-dotnet
+
 using Microsoft.Extensions.Caching.Memory;
 using UrlShortner.Common;
 using UrlShortner.DataAccess;
@@ -12,7 +14,7 @@ if (builder.Environment.IsDevelopment())
     builder.RegisterDevDependencies();
 }
 
-builder.RegisteUrlrServices();
+builder.RegisteUrlServices();
 
 builder.Services.AddCors();
 builder.Configuration.AddEnvironmentVariables();
@@ -25,36 +27,7 @@ app.UseSwaggerUI();
 app.UseHttpsRedirection();
 app.UseCors();
 
-app.MapPost("shorten", async (
-    ShortenUrlRequest request,
-    IUrlShorteningService urlShorteningService,
-    UrlShortnerDbContext dbContext,
-    HttpContext httpContext) =>
-{
-    if (!Uri.TryCreate(request.Url, UriKind.Absolute, out _))
-    {
-        return Results.BadRequest("The specified URL is invalid.");
-    }
-
-    var code = await urlShorteningService.GenerateUniqueCode();
-
-    var httpRequest = httpContext.Request;
-
-    var shortenedUrl = new ShortUrl
-    {
-        Id = Guid.NewGuid(),
-        Long = request.Url,
-        Code = code,
-        Short = $"{httpRequest.Scheme}://{httpRequest.Host}/{code}",
-        CreatedOnUtc = DateTime.UtcNow
-    };
-    // TODO: move to service
-    dbContext.ShortenedUrls.Add(shortenedUrl);
-
-    await dbContext.SaveChangesAsync();
-
-    return Results.Ok(new { ShortUrl = shortenedUrl.Short});
-})
+app.MapPost("shorten", EndpointHandlers.CreateShortLink())
 .WithName("create")
 .WithOpenApi();
 
