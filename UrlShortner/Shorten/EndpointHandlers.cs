@@ -31,7 +31,7 @@ public static class EndpointHandlers
         {
             var shortenedUrl = await urlShorteningService.GetUrlFromCode(code);
 
-            if (shortenedUrl is null)
+            if (string.IsNullOrWhiteSpace(shortenedUrl))
             {
                 return Results.NotFound();
             }
