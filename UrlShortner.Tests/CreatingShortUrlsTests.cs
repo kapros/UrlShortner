@@ -21,6 +21,7 @@ public class CreatingShortUrlsTests
         using var scope = _factory.Server.Services.CreateScope();
         var scopedServices = scope.ServiceProvider;
         var dbContext = scopedServices.GetRequiredService<UrlShortnerDbContext>();
+        dbContext.Database.EnsureDeleted();
         dbContext.Database.EnsureCreated();
         _client = _factory.CreateClient();
     }
