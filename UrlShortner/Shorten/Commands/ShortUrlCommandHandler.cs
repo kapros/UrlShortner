@@ -1,6 +1,4 @@
-﻿using UrlShortner.Shorten.Commands;
-
-namespace UrlShortner.Shorten;
+﻿namespace UrlShortner.Shorten.Commands;
 
 public class ShortUrlCommandHandler(IUrlShorteningService urlShorteningService) : ICommandHandler<CreateShortUrlCommand, string>
 {
