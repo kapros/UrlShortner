@@ -9,4 +9,3 @@ public interface ICommandHandler<T>
 {
     Task Handle(T input);
 }
-
