@@ -16,10 +16,10 @@ public static class EndpointHandlers
                 return Results.BadRequest("The specified URL is invalid.");
             }
 
-            var shortenedUrl = await urlShorteningService.ShortenUrl(request.Url, httpContext.Request);
+            var handler = new ShortUrlCommandHandler(urlShorteningService);
+            var shortenedUrl = await handler.Handle(new Commands.CreateShortUrlCommand( request.Url, httpContext.Request));
 
-
-            return Results.Ok(new { ShortUrl = shortenedUrl.Short });
+            return Results.Ok(new { ShortUrl = shortenedUrl });
         };
     }
 
