@@ -1,6 +1,4 @@
-﻿using UrlShortner.DataAccess;
-
-namespace UrlShortner.Shorten;
+﻿namespace UrlShortner.Shorten;
 
 public static class EndpointHandlers
 {
@@ -17,7 +15,7 @@ public static class EndpointHandlers
             }
 
             var handler = new ShortUrlCommandHandler(urlShorteningService);
-            var shortenedUrl = await handler.Handle(new Commands.CreateShortUrlCommand( request.Url, httpContext.Request));
+            var shortenedUrl = await handler.Handle(new CreateShortUrlCommand( request.Url, httpContext.Request));
 
             return Results.Ok(new { ShortUrl = shortenedUrl });
         };
