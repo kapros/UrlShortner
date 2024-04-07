@@ -7,6 +7,6 @@ public interface ICommandHandler<TInput, TResult>
 
 public interface ICommandHandler<T>
 {
-    Task<T> Handle(T input);
+    Task Handle(T input);
 }
 
