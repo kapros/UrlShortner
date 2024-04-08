@@ -32,8 +32,8 @@ public class CreatingShortUrlsTests
         var response = await _client.PostAsync("shorten", JsonContent.Create(new { url = "https://test.com" }));
         var content = await response.Content.ReadAsStringAsync();
         string shortUrl = JsonConvert.DeserializeObject<dynamic>(content).shortUrl;
-        Assert.NotEqual(shortUrl, "https://test.com");
-        Assert.True(shortUrl.Contains("localhost"));
+        Assert.NotEqual("https://test.com", shortUrl);
+        Assert.Contains("localhost", shortUrl);
     }
 
     [Fact]
