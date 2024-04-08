@@ -2,11 +2,11 @@
 
 public static class EndpointHandlers
 {
-    public static Func<ShortenUrlRequest, IUrlShorteningService, HttpContext, Task<IResult>> CreateShortLink()
+    public static Func<ShortenUrlRequest, ShortUrlCommandHandler, HttpContext, Task<IResult>> CreateShortLink()
     {
         return async (
             ShortenUrlRequest request,
-            IUrlShorteningService urlShorteningService,
+            ShortUrlCommandHandler handler,
             HttpContext httpContext) =>
         {
             if (!Uri.TryCreate(request.Url, UriKind.Absolute, out _))
@@ -14,19 +14,18 @@ public static class EndpointHandlers
                 return Results.BadRequest("The specified URL is invalid.");
             }
 
-            var handler = new ShortUrlCommandHandler(urlShorteningService);
             var shortenedUrl = await handler.Handle(new CreateShortUrlCommand( request.Url, httpContext.Request));
 
             return Results.Ok(new { ShortUrl = shortenedUrl });
         };
     }
 
-    public static Func<Code, IUrlShorteningService, Task<IResult>> GetByCode()
+    public static Func<Code, GetShortenedUrlQueryHandler, Task<IResult>> GetByCode()
     {
         return async (Code code,
-            IUrlShorteningService urlShorteningService) =>
+            GetShortenedUrlQueryHandler handler) =>
         {
-            var shortenedUrl = await urlShorteningService.GetUrlFromCode(code);
+            var shortenedUrl = await handler.Handle(new GetShortenedUrlQuery(code));
 
             if (string.IsNullOrWhiteSpace(shortenedUrl))
             {

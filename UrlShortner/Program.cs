@@ -9,6 +9,7 @@ if (builder.Environment.IsDevelopment())
 }
 
 builder.RegisterUrlServices();
+builder.RegisterHandlers();
 
 builder.Services.AddCors();
 builder.Configuration.AddEnvironmentVariables();

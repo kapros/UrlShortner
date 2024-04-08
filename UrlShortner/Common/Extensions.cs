@@ -22,4 +22,20 @@ public static class Extensions
             new CachedUrlShorteningService(x.GetRequiredService<UrlShorteningService>(), x.GetRequiredService<IMemoryCache>()));
     }
 
+
+    public static void RegisterHandlers(this WebApplicationBuilder builder)
+    {
+        builder.RegisterCommandHandlers();
+        builder.RegisterQueryHandlers();
+    }
+
+    public static void RegisterCommandHandlers(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<ShortUrlCommandHandler>();
+    }
+
+    public static void RegisterQueryHandlers(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<GetShortenedUrlQueryHandler>();
+    }
 }
