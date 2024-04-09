@@ -1,6 +1,8 @@
-﻿namespace UrlShortner.Shorten.Queries;
+﻿using UrlShortner.Domain;
 
-public class GetShortenedUrlQuery(Code code)
+namespace UrlShortner.Shorten.Queries;
+
+public class GetShortenedUrlQuery(Code code) : IQuery
 {
     public Code Code => code;
 }

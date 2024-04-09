@@ -1,11 +1,13 @@
-﻿namespace UrlShortner.DataAccess;
+﻿using UrlShortner.Domain;
+
+namespace UrlShortner.DataAccess;
 
 public class CodeConverter : ValueConverter<Code, string>
 {
     public CodeConverter()
         : base(
             v => v.code,
-            v => new Code(v))
+            v => Code.Create(v))
     {
     }
 }

@@ -8,7 +8,7 @@ public static class Extensions
 {
     public static void RegisterDevDependencies(this WebApplicationBuilder builder)
     {
-        builder.Services.AddDbContext<UrlShortnerDbContext>(opt => opt.UseInMemoryDatabase("UrlShortener"));
+        builder.Services.AddDbContext<UrlShortenerDbContext>(opt => opt.UseInMemoryDatabase("UrlShortener"));
         // can also seed the DB later
         builder.Services.AddMemoryCache();
     }

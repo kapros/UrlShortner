@@ -1,10 +1,11 @@
-﻿using UrlShortner.Settings;
+﻿using UrlShortner.Domain;
+using UrlShortner.Settings;
 
 namespace UrlShortner.DataAccess;
 
-public class UrlShortnerDbContext : DbContext
+public class UrlShortenerDbContext : DbContext
 {
-    public UrlShortnerDbContext(DbContextOptions options)
+    public UrlShortenerDbContext(DbContextOptions options)
         : base(options)
     {
     }
@@ -19,7 +20,8 @@ public class UrlShortnerDbContext : DbContext
                 .Property(shortUrl => shortUrl.Code)
                 .HasMaxLength(ShortUrlSettings.Length)
                 //.HasConversion<string>()
-                .HasConversion(new CodeConverter());
+                .HasConversion(new CodeConverter())
+                .HasMaxLength(10);
 
             builder.Property(shortUrl => shortUrl.Short).HasColumnName("ShortUrl");
 

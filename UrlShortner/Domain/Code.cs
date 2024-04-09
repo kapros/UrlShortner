@@ -1,8 +1,7 @@
-﻿namespace UrlShortner.DataAccess;
+﻿namespace UrlShortner.Domain;
 
 public readonly record struct Code(string code)
 {
-
     public override string ToString()
     {
         return code;
@@ -12,6 +11,8 @@ public readonly record struct Code(string code)
     {
         return new Code(new string(codeChars));
     }
+
+    public static Code Create(string code) => new(code);
 
     public static Code Empty()
     {

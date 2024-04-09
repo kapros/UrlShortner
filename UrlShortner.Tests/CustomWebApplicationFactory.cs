@@ -21,14 +21,11 @@ public class CustomWebApplicationFactory<TProgram>
         {
             var dbContextDescriptor = services.SingleOrDefault(
                 d => d.ServiceType ==
-                    typeof(DbContextOptions<UrlShortnerDbContext>));
-
+                    typeof(DbContextOptions<UrlShortenerDbContext>));
             services.Remove(dbContextDescriptor);
-
             var dbConnectionDescriptor = services.SingleOrDefault(
                 d => d.ServiceType ==
                     typeof(DbConnection));
-
             services.Remove(dbConnectionDescriptor);
 
             // Create open SqliteConnection so EF won't automatically close it.
@@ -36,11 +33,10 @@ public class CustomWebApplicationFactory<TProgram>
             {
                 var connection = new SqliteConnection("DataSource=:memory:");
                 connection.Open();
-
                 return connection;
             });
 
-            services.AddDbContext<UrlShortnerDbContext>((container, options) =>
+            services.AddDbContext<UrlShortenerDbContext>((container, options) =>
             {
                 var connection = container.GetRequiredService<DbConnection>();
                 options.UseSqlite(connection);

@@ -1,11 +1,13 @@
-﻿namespace UrlShortner.Shorten;
+﻿using UrlShortner.Domain;
+
+namespace UrlShortner.Shorten;
 
 public class UrlShorteningService : IUrlShorteningService
 {
-    private readonly UrlShortnerDbContext _dbContext;
+    private readonly UrlShortenerDbContext _dbContext;
     private readonly IRandomizer _randomizer;
 
-    public UrlShorteningService(UrlShortnerDbContext dbContext, IRandomizer randomizer)
+    public UrlShorteningService(UrlShortenerDbContext dbContext, IRandomizer randomizer)
     {
         _dbContext = dbContext;
         _randomizer = randomizer;
@@ -17,9 +19,9 @@ public class UrlShorteningService : IUrlShorteningService
         var shortenedUrl = new ShortUrl
         {
             Id = Guid.NewGuid(),
-            Long = urlToShorten,
+            Long = Link.Create(urlToShorten),
             Code = code,
-            Short = $"{httpRequest.Scheme}://{httpRequest.Host}/{code}",
+            Short = Link.Create($"{httpRequest.Scheme}://{httpRequest.Host}/{code}"),
             CreatedOnUtc = DateTime.UtcNow
         };
         _dbContext.ShortenedUrls.Add(shortenedUrl);
@@ -56,7 +58,7 @@ public class UrlShorteningService : IUrlShorteningService
         var result = await _dbContext
             .ShortenedUrls
             .SingleOrDefaultAsync(s => s.Code == code);
-        return result?.Long;
+        return result?.Long.ToString();
     }
 
     public async Task DeleteShortUrl(Code code)
