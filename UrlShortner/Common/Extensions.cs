@@ -32,7 +32,8 @@ public static class Extensions
     /// </summary>
     public static WebApplicationBuilder AddNonDomainServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddResponseCompression(opts => {
+        builder.Services.AddResponseCompression(opts =>
+        {
             opts.EnableForHttps = true;
             opts.Providers.Add<BrotliCompressionProvider>();
             opts.MimeTypes = ResponseCompressionDefaults.MimeTypes;
@@ -41,6 +42,14 @@ public static class Extensions
         {
             opts.Level = System.IO.Compression.CompressionLevel.Fastest;
         });
+
+        var logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration)
+            .Enrich.FromLogContext()
+            .CreateLogger();
+        builder.Logging.ClearProviders();
+        builder.Logging.AddSerilog(logger);
+        builder.Host.UseSerilog(logger);
         return builder;
     }
 

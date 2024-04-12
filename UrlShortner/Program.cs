@@ -1,4 +1,5 @@
 // based on https://www.milanjovanovic.tech/blog/how-to-build-a-url-shortener-with-dotnet
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
@@ -8,11 +9,14 @@ if (builder.Environment.IsDevelopment())
     builder.RegisterDevDependencies();
 }
 
+builder.AddNonDomainServices();
+
 builder.RegisterUrlServices();
 builder.RegisterHandlers();
 
 builder.Services.AddCors();
 builder.Configuration.AddEnvironmentVariables();
+
 
 var app = builder.Build();
 
@@ -21,6 +25,7 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseCors();
+app.UseSerilogRequestLogging();
 
 app.MapPost("shorten", EndpointHandlers.CreateShortLink())
 .WithName("create")

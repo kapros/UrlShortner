@@ -4,12 +4,12 @@ namespace UrlShortner.Shorten;
 
 public static class EndpointHandlers
 {
-    public static Func<ShortenUrlRequest, ShortUrlCommandHandler, HttpContext, Task<IResult>> CreateShortLink()
+    public static Func<ShortenUrlRequest, ShortUrlCommandHandler, HttpContext, ILogger, Task<IResult>> CreateShortLink()
     {
         return async (
             ShortenUrlRequest request,
             ShortUrlCommandHandler handler,
-            HttpContext httpContext) =>
+            HttpContext httpContext, ILogger logger) =>
         {
             if (!Uri.TryCreate(request.Url, UriKind.Absolute, out _))
             {
@@ -22,10 +22,10 @@ public static class EndpointHandlers
         };
     }
 
-    public static Func<Code, GetShortenedUrlQueryHandler, Task<IResult>> GetByCode()
+    public static Func<Code, GetShortenedUrlQueryHandler, ILogger, Task<IResult>> GetByCode()
     {
         return async (Code code,
-            GetShortenedUrlQueryHandler handler) =>
+            GetShortenedUrlQueryHandler handler, ILogger logger) =>
         {
             var shortenedUrl = await handler.Handle(new GetShortenedUrlQuery(code));
 
@@ -38,10 +38,10 @@ public static class EndpointHandlers
         };
     }
 
-    public static Func<Code, IUrlShorteningService, Task<IResult>> DeleteByCode()
+    public static Func<Code, IUrlShorteningService, ILogger, Task<IResult>> DeleteByCode()
 {
         return async (Code code,
-                    IUrlShorteningService urlShorteningService) =>
+                    IUrlShorteningService urlShorteningService, ILogger logger) =>
         {
             if (string.IsNullOrWhiteSpace((await urlShorteningService.GetUrlFromCode(code))))
             {
