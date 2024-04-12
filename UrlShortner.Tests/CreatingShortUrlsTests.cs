@@ -20,7 +20,7 @@ public class CreatingShortUrlsTests
         _factory = factory;
         using var scope = _factory.Server.Services.CreateScope();
         var scopedServices = scope.ServiceProvider;
-        var dbContext = scopedServices.GetRequiredService<UrlShortnerDbContext>();
+        var dbContext = scopedServices.GetRequiredService<UrlShortenerDbContext>();
         dbContext.Database.EnsureDeleted();
         dbContext.Database.EnsureCreated();
         _client = _factory.CreateClient();
@@ -60,9 +60,9 @@ public class CreatingShortUrlsTests
 
         using var scope = _factory.Server.Services.CreateScope();
         var scopedServices = scope.ServiceProvider;
-        var dbContext = scopedServices.GetRequiredService<UrlShortnerDbContext>();
+        var dbContext = scopedServices.GetRequiredService<UrlShortenerDbContext>();
         var allEntries = await dbContext.ShortenedUrls.ToListAsync();
         Assert.Equal(1, allEntries.Count);
-        Assert.Equal("https://test.com", allEntries.First().Long);
+        Assert.Equal("https://test.com", allEntries.First().Long.url);
     }
 }

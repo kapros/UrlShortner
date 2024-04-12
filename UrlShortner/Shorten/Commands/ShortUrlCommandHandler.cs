@@ -8,6 +8,6 @@ public class ShortUrlCommandHandler(IUrlShorteningService urlShorteningService) 
     public async Task<string> Handle(CreateShortUrlCommand input)
     {
         var result = await urlShorteningService.ShortenUrl(input.Url, input.HttpRequest);
-        return result.Short;
+        return result.Short.url;
     }
 }
