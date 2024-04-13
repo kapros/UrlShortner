@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.ResponseCompression;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using UrlShortner.DataAccess;
 using UrlShortner.Shorten;
@@ -71,4 +73,42 @@ public static class Extensions
         builder.Services.AddScoped<GetShortenedUrlQueryHandler>();
         return builder;
     }
+
+    public static IServiceCollection AddEndpoints(this IServiceCollection services, Assembly assembly)
+    {
+        var serviceDescriptors = assembly
+            .DefinedTypes
+            .Where(type => 
+            type is { IsAbstract: false, IsInterface: false } && 
+            type.IsAssignableTo(typeof(IEndpoint)))
+            .Select(type => ServiceDescriptor.Transient(typeof(IEndpoint), type))
+            .ToArray();
+        services.TryAddEnumerable(serviceDescriptors);
+        return services;
+    }
+
+    public static IApplicationBuilder MapEndpoints(this WebApplication app, RouteGroupBuilder? routeGroupBuilder = null, int? versionsToMap = null)
+    {
+        var endpoints = app.Services
+            .GetRequiredService<IEnumerable<IEndpoint>>();
+
+        var builder =
+            routeGroupBuilder is null ? app as IEndpointRouteBuilder : routeGroupBuilder;
+
+        foreach (var endpoint in endpoints)
+        {
+            endpoint.MapEndpoint(builder)
+                .WithName(endpoint.EndpointName)
+                .WithTags(endpoint.EndpointTag)
+                .WithOpenApi();
+        }
+
+        return app;
+    }
 }
+
+/*
+    https://www.milanjovanovic.tech/blog/lightweight-in-memory-message-bus-using-dotnet-channels
+    https://www.milanjovanovic.tech/blog/using-masstransit-with-rabbitmq-and-azure-service-bus
+    https://www.milanjovanovic.tech/blog/value-objects-in-dotnet-ddd-fundamentals
+*/

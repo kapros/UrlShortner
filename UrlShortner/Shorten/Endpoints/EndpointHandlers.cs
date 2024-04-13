@@ -1,22 +1,22 @@
 ﻿using UrlShortner.Domain;
 
-namespace UrlShortner.Shorten;
+namespace UrlShortner.Shorten.Endpoints;
 
 public static class EndpointHandlers
 {
     public static Func<ShortenUrlRequest, ShortUrlCommandHandler, HttpContext, ILogger, Task<IResult>> CreateShortLink()
     {
         return async (
-            ShortenUrlRequest request,
-            ShortUrlCommandHandler handler,
-            HttpContext httpContext, ILogger logger) =>
+request,
+handler,
+httpContext, logger) =>
         {
             if (!Uri.TryCreate(request.Url, UriKind.Absolute, out _))
             {
                 return Results.BadRequest("The specified URL is invalid.");
             }
 
-            var shortenedUrl = await handler.Handle(new CreateShortUrlCommand( request.Url, httpContext.Request));
+            var shortenedUrl = await handler.Handle(new CreateShortUrlCommand(request.Url, httpContext.Request));
 
             return Results.Ok(new { ShortUrl = shortenedUrl });
         };
@@ -24,8 +24,8 @@ public static class EndpointHandlers
 
     public static Func<Code, GetShortenedUrlQueryHandler, ILogger, Task<IResult>> GetByCode()
     {
-        return async (Code code,
-            GetShortenedUrlQueryHandler handler, ILogger logger) =>
+        return async (code,
+handler, logger) =>
         {
             var shortenedUrl = await handler.Handle(new GetShortenedUrlQuery(code));
 
@@ -39,11 +39,11 @@ public static class EndpointHandlers
     }
 
     public static Func<Code, IUrlShorteningService, ILogger, Task<IResult>> DeleteByCode()
-{
-        return async (Code code,
-                    IUrlShorteningService urlShorteningService, ILogger logger) =>
+    {
+        return async (code,
+urlShorteningService, logger) =>
         {
-            if (string.IsNullOrWhiteSpace((await urlShorteningService.GetUrlFromCode(code))))
+            if (string.IsNullOrWhiteSpace(await urlShorteningService.GetUrlFromCode(code)))
             {
                 return Results.NotFound();
             }
