@@ -97,18 +97,16 @@ public static class Extensions
 
         foreach (var endpoint in endpoints)
         {
-            endpoint.MapEndpoint(builder)
-                .WithName(endpoint.EndpointName)
-                .WithTags(endpoint.EndpointTag)
-                .WithOpenApi();
+            if (!versionsToMap.HasValue || endpoint.ApiVersions.Contains(versionsToMap.Value))
+            {
+                endpoint.MapEndpoint(builder)
+                    .WithName(endpoint.EndpointName)
+                    .WithTags(endpoint.EndpointTag)
+                    .WithOpenApi();
+            }
         }
 
         return app;
     }
 }
 
-/*
-    https://www.milanjovanovic.tech/blog/lightweight-in-memory-message-bus-using-dotnet-channels
-    https://www.milanjovanovic.tech/blog/using-masstransit-with-rabbitmq-and-azure-service-bus
-    https://www.milanjovanovic.tech/blog/value-objects-in-dotnet-ddd-fundamentals
-*/
