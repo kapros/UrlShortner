@@ -39,7 +39,7 @@ public static class Extensions
     {
         var config = builder.Configuration.Get<StaleConfigurationDeletingServiceConfig>();
         builder.Services.AddSingleton(config);
-        builder.Services.AddHostedService<StaleUrlsDeletingService>();
+        builder.Services.AddHostedService<StaleUrlsDeletingJob>();
         return builder;
     }
 
