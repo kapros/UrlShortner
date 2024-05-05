@@ -24,7 +24,9 @@ public class StaleUrlsDeletingService : IHostedService
 
             using var scope = _services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<UrlShortenerDbContext>();
-            var deleted = await dbContext.ShortenedUrls.Where(x => x.CreatedOnUtc < cutoff).ExecuteDeleteAsync(cancellationToken: stoppingToken);
+            var deleted =
+                await dbContext.ShortenedUrls.Where(x => x.CreatedOnUtc < cutoff)
+                .ExecuteDeleteAsync(cancellationToken: stoppingToken);
 
             _logger.LogInformation($"Deleted {deleted} links.");
         }

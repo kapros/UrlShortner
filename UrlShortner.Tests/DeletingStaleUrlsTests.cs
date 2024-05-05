@@ -1,9 +1,11 @@
 ﻿using System.Dynamic;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Newtonsoft.Json;
@@ -17,26 +19,25 @@ public class DeletingStaleUrlsTests
     private readonly char[] _codeToDelete = "a1Bc12".ToCharArray();
     private readonly char[] _codeToKeep = "d4Ef56".ToCharArray();
     private ServiceProvider _scopedServices;
+    private SqliteConnection _connection;
     private readonly StaleUrlsDeletingService _staleUrlsDeletingService;
 
     public DeletingStaleUrlsTests()
     {
         var sc = new ServiceCollection();
+        _connection = new SqliteConnection("Filename=:memory:");
+        _connection.Open();
         var opts = new DbContextOptionsBuilder<UrlShortenerDbContext>();
-        // won't work at this time, either try a docker container with a DB or SQLite
-        // see extension RegisterStaleUrlsDeletingService
-        opts.UseInMemoryDatabase("UrlShortener");
+        opts.UseSqlite(_connection);
         var dbContext = new UrlShortenerDbContext(opts.Options);
-        dbContext.Database.EnsureDeleted();
         dbContext.Database.EnsureCreated();
         dbContext.ShortenedUrls.Add(new ShortUrl
         {
             Code = Code.Create(_codeToKeep),
-            CreatedOnUtc = DateTime.UtcNow,
+            CreatedOnUtc = DateTime.UtcNow.AddMinutes(5),
             Short = Link.Create("https://localhost/" + new string(_codeToKeep)),
             Long = Link.Create("https://test.com")
         });
-        dbContext.SaveChanges();
         dbContext.ShortenedUrls.Add(new ShortUrl
         {
             Code = Code.Create(_codeToDelete),
@@ -46,22 +47,30 @@ public class DeletingStaleUrlsTests
         });
         dbContext.SaveChanges();
 
-        sc.AddScoped((IServiceProvider _) => dbContext);
+        sc.AddScoped((IServiceProvider _) => new UrlShortenerDbContext(opts.Options));
         var logger = NullLogger<StaleUrlsDeletingService>.Instance;
 
 
         _scopedServices = sc.BuildServiceProvider();
 
-        _staleUrlsDeletingService = new StaleUrlsDeletingService(logger, _scopedServices, new StaleConfigurationDeletingServiceConfig() { Interval = TimeSpan.FromSeconds(2) });
+        _staleUrlsDeletingService = new StaleUrlsDeletingService(logger, _scopedServices, new StaleConfigurationDeletingServiceConfig() { Interval = TimeSpan.FromSeconds(1) });
     }
 
     [Fact]
     public async Task PurgesStaleUrls()
     {
-        await _staleUrlsDeletingService.StartAsync(CancellationToken.None);
-        await Task.Delay(TimeSpan.FromSeconds(3));
+        // hacky way to gracefully invoke a cancellation
+        // todo: look for better handling of start/stop so it actually does its job
+        CancellationTokenSource source = new CancellationTokenSource();
+        CancellationToken token = source.Token;
+        await Task.WhenAny(new List<Task>() {
+            Task.Delay(TimeSpan.FromSeconds(2)),
+            _staleUrlsDeletingService.StartAsync(token)
+        });
 
-        var dbContext = _scopedServices.GetRequiredService<UrlShortenerDbContext>();
+        var opts = new DbContextOptionsBuilder<UrlShortenerDbContext>();
+        opts.UseSqlite(_connection);
+        var dbContext = new UrlShortenerDbContext(opts.Options);
         var allEntries = await dbContext.ShortenedUrls.ToListAsync();
         Assert.Equal(1, allEntries.Count);
         Assert.Equal("https://test.com", allEntries.First().Long.url);
