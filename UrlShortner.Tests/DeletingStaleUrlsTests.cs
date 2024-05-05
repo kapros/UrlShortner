@@ -20,7 +20,7 @@ public class DeletingStaleUrlsTests
     private readonly char[] _codeToKeep = "d4Ef56".ToCharArray();
     private ServiceProvider _scopedServices;
     private SqliteConnection _connection;
-    private readonly StaleUrlsDeletingService _staleUrlsDeletingService;
+    private readonly StaleUrlsDeletingJob _staleUrlsDeletingService;
 
     public DeletingStaleUrlsTests()
     {
@@ -48,12 +48,12 @@ public class DeletingStaleUrlsTests
         dbContext.SaveChanges();
 
         sc.AddScoped((IServiceProvider _) => new UrlShortenerDbContext(opts.Options));
-        var logger = NullLogger<StaleUrlsDeletingService>.Instance;
+        var logger = NullLogger<StaleUrlsDeletingJob>.Instance;
 
 
         _scopedServices = sc.BuildServiceProvider();
 
-        _staleUrlsDeletingService = new StaleUrlsDeletingService(logger, _scopedServices, new StaleConfigurationDeletingServiceConfig() { Interval = TimeSpan.FromSeconds(1) });
+        _staleUrlsDeletingService = new StaleUrlsDeletingJob(logger, _scopedServices, new StaleConfigurationDeletingServiceConfig() { Interval = TimeSpan.FromSeconds(1) });
     }
 
     [Fact]
