@@ -1,9 +1,11 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using UrlShortner.DataAccess;
+using UrlShortner.Jobs;
 using UrlShortner.Shorten;
 
 namespace UrlShortner.Common;
@@ -25,6 +27,19 @@ public static class Extensions
         builder.Services.AddScoped<IUrlShorteningService>(
             x =>
             new CachedUrlShorteningService(x.GetRequiredService<UrlShorteningService>(), x.GetRequiredService<IMemoryCache>()));
+        return builder;
+    }
+
+    /// <summary>
+    /// Adds config and service for deleting old links.
+    /// </summary>
+    /// <remarks>DOES NOT WORK WITH IN-MEMORY DB</remarks>
+    /// <see cref="https://github.com/dotnet/efcore/issues/30185"/>
+    public static WebApplicationBuilder RegisterStaleUrlsDeletingService(this WebApplicationBuilder builder)
+    {
+        var config = builder.Configuration.Get<StaleConfigurationDeletingServiceConfig>();
+        builder.Services.AddSingleton(config);
+        builder.Services.AddHostedService<StaleUrlsDeletingService>();
         return builder;
     }
 
@@ -110,3 +125,8 @@ public static class Extensions
     }
 }
 
+/*
+    https://www.milanjovanovic.tech/blog/lightweight-in-memory-message-bus-using-dotnet-channels
+    https://www.milanjovanovic.tech/blog/using-masstransit-with-rabbitmq-and-azure-service-bus
+    https://www.milanjovanovic.tech/blog/value-objects-in-dotnet-ddd-fundamentals
+*/

@@ -16,6 +16,12 @@ if (builder.Environment.IsDevelopment())
 builder.AddNonDomainServices();
 
 builder.RegisterUrlServices();
+
+if (!builder.Environment.IsDevelopment())
+{
+    builder.RegisterStaleUrlsDeletingService();
+}
+
 builder.RegisterHandlers();
 
 builder.Services.AddCors();
