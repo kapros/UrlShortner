@@ -4,9 +4,9 @@ public class StaleUrlsDeletingJob : IHostedService
     private int executionCount = 0;
     private readonly ILogger<StaleUrlsDeletingJob> _logger;
     private readonly IServiceProvider _services;
-    private readonly StaleConfigurationDeletingServiceConfig _config;
+    private readonly StaleConfigurationDeletingServiceSettings _config;
 
-    public StaleUrlsDeletingJob(ILogger<StaleUrlsDeletingJob> logger, IServiceProvider services, StaleConfigurationDeletingServiceConfig config)
+    public StaleUrlsDeletingJob(ILogger<StaleUrlsDeletingJob> logger, IServiceProvider services, StaleConfigurationDeletingServiceSettings config)
     {
         _logger = logger;
         _services = services;

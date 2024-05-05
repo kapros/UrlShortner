@@ -37,7 +37,7 @@ public static class Extensions
     /// <see cref="https://github.com/dotnet/efcore/issues/30185"/>
     public static WebApplicationBuilder RegisterStaleUrlsDeletingService(this WebApplicationBuilder builder)
     {
-        var config = builder.Configuration.Get<StaleConfigurationDeletingServiceConfig>();
+        var config = builder.Configuration.Get<StaleConfigurationDeletingServiceSettings>();
         builder.Services.AddSingleton(config);
         builder.Services.AddHostedService<StaleUrlsDeletingJob>();
         return builder;

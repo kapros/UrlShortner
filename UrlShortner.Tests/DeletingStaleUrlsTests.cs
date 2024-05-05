@@ -53,7 +53,7 @@ public class DeletingStaleUrlsTests
 
         _scopedServices = sc.BuildServiceProvider();
 
-        _staleUrlsDeletingService = new StaleUrlsDeletingJob(logger, _scopedServices, new StaleConfigurationDeletingServiceConfig() { Interval = TimeSpan.FromSeconds(1) });
+        _staleUrlsDeletingService = new StaleUrlsDeletingJob(logger, _scopedServices, new StaleConfigurationDeletingServiceSettings() { Interval = TimeSpan.FromSeconds(1) });
     }
 
     [Fact]

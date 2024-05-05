@@ -1,8 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using UrlShortner.Domain;
-using UrlShortner.Settings;
-
-namespace UrlShortner.DataAccess;
+﻿namespace UrlShortner.DataAccess;
 
 public class UrlShortenerDbContext : DbContext
 {
