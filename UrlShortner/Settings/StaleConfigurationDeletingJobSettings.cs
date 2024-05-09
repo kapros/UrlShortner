@@ -1,6 +1,6 @@
 ﻿namespace UrlShortner;
 
-public class StaleConfigurationDeletingServiceSettings
+public class StaleConfigurationDeletingJobSettings
 {
     public TimeSpan Interval { get; set; }
 }

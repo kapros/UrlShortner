@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UrlShortner.DataAccess;
 using UrlShortner.Domain;
 using UrlShortner.Jobs;
@@ -53,7 +54,7 @@ public class DeletingStaleUrlsTests
 
         _scopedServices = sc.BuildServiceProvider();
 
-        _staleUrlsDeletingService = new StaleUrlsDeletingJob(logger, _scopedServices, new StaleConfigurationDeletingServiceSettings() { Interval = TimeSpan.FromSeconds(1) });
+        _staleUrlsDeletingService = new StaleUrlsDeletingJob(logger, _scopedServices, new StaleConfigurationDeletingJobSettings() { Interval = TimeSpan.FromSeconds(100) });
     }
 
     [Fact]
@@ -64,11 +65,13 @@ public class DeletingStaleUrlsTests
         CancellationTokenSource source = new CancellationTokenSource();
         CancellationToken token = source.Token;
         await Task.WhenAny(new List<Task>() {
-            Task.Delay(TimeSpan.FromSeconds(2)),
-            _staleUrlsDeletingService.StartAsync(token)
+         _staleUrlsDeletingService.StartAsync(token),
+        Task.Delay(TimeSpan.FromSeconds(2))
         });
+    
+        await _staleUrlsDeletingService.StopAsync(token);
 
-        var opts = new DbContextOptionsBuilder<UrlShortenerDbContext>();
+    var opts = new DbContextOptionsBuilder<UrlShortenerDbContext>();
         opts.UseSqlite(_connection);
         var dbContext = new UrlShortenerDbContext(opts.Options);
         var allEntries = await dbContext.ShortenedUrls.ToListAsync();

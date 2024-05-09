@@ -10,6 +10,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using UrlShortner.DataAccess;
+using UrlShortner.Jobs;
 
 namespace UrlShortner.Tests;
 public class CustomWebApplicationFactory<TProgram>
@@ -27,6 +28,12 @@ public class CustomWebApplicationFactory<TProgram>
                 d => d.ServiceType ==
                     typeof(DbConnection));
             services.Remove(dbConnectionDescriptor);
+
+            var staleLinksJobDescriptor = services.SingleOrDefault(
+                d => d.ServiceType ==
+                typeof(StaleUrlsDeletingJob));
+            services.Remove(staleLinksJobDescriptor);
+
 
             // Create open SqliteConnection so EF won't automatically close it.
             services.AddSingleton<DbConnection>(container =>

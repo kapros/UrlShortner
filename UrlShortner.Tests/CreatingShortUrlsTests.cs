@@ -1,5 +1,6 @@
 ﻿using System.Dynamic;
 using System.Net.Http.Json;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -24,6 +25,13 @@ public class CreatingShortUrlsTests
         dbContext.Database.EnsureDeleted();
         dbContext.Database.EnsureCreated();
         _client = _factory.CreateClient();
+        var latestVersion = _factory
+            .Services
+            .GetRequiredService<IApiVersionDescriptionProvider>()
+            .ApiVersionDescriptions
+            .OrderByDescending(x => x.ApiVersion)
+            .Single();
+        _client.BaseAddress = new Uri(_client.BaseAddress + $"api/{latestVersion.GroupName}/");
     }
 
     [Fact]

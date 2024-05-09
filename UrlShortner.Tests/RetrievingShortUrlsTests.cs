@@ -1,6 +1,8 @@
 ﻿using System.Dynamic;
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.RegularExpressions;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -37,12 +39,20 @@ public class RetrievingShortUrlsTests
         {
             AllowAutoRedirect = false,
         });
+        var latestVersion = _factory
+            .Services
+            .GetRequiredService<IApiVersionDescriptionProvider>()
+            .ApiVersionDescriptions
+            .OrderByDescending(x => x.ApiVersion)
+            .Single();
+        _client.BaseAddress = new Uri(_client.BaseAddress + $"api/{latestVersion.GroupName}/");
     }
 
     [Fact]
     public async Task GetFetchesTheUrl()
     {
         var response = await _client.GetAsync(new string(_code));
+
         Assert.Equal(expected: HttpStatusCode.Found, response.StatusCode);
         var redirect = response.Headers.Location;
         Assert.Equal("https://test.com/", redirect.ToString());
@@ -54,7 +64,8 @@ public class RetrievingShortUrlsTests
         var response = await _client.GetAsync(new string(_code));
         var memCache = _factory.Server.Services.GetRequiredService(typeof(IMemoryCache)) as IMemoryCache;
         Assert.NotNull(memCache);
-        var cached = memCache.Get(_code);
+        var key = Code.Create(_code);
+        var cached = memCache.Get(key.ToString());
         Assert.NotNull(cached);
     }
 }
