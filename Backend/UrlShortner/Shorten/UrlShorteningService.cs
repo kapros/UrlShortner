@@ -53,6 +53,12 @@ public class UrlShorteningService : IUrlShorteningService
         }
     }
 
+    public async Task<AllShortUrlsResponse> GetAllUrls()
+    {
+        var allLinks = await _dbContext.ShortenedUrls.ToListAsync();
+        return new AllShortUrlsResponse(allLinks.Select(x => new ShortUrlResponse(x.Short.url, x.Long.url, x.Code.code)));
+    }
+
     public async Task<string?> GetUrlFromCode(Code code)
     {
         var result = await _dbContext

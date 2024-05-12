@@ -18,7 +18,7 @@ public class CachedUrlShorteningService : IUrlShorteningService
     public async Task<ShortUrl> ShortenUrl(string urlToShorten, HttpRequest httpRequest) 
     { 
         var shortUrl = await _decorated.ShortenUrl(urlToShorten, httpRequest);
-        _memoryCache.Set(shortUrl.Code.code, shortUrl.Long);
+        _memoryCache.Set(shortUrl.Code.code, shortUrl.Long.url);
         return shortUrl;
     }
 
@@ -38,8 +38,14 @@ public class CachedUrlShorteningService : IUrlShorteningService
         try
         {
             await _decorated.DeleteShortUrl(code);
-            _memoryCache.Remove(code);
+            _memoryCache.Remove(code.code);
         }
         catch { }
+    }
+
+    public async Task<AllShortUrlsResponse> GetAllUrls()
+    {
+        // in memory cache does not support listing all keys.
+        return await _decorated.GetAllUrls();
     }
 }

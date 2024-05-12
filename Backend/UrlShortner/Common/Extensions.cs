@@ -86,6 +86,7 @@ public static class Extensions
     public static WebApplicationBuilder RegisterQueryHandlers(this WebApplicationBuilder builder)
     {
         builder.Services.AddScoped<GetShortenedUrlQueryHandler>();
+        builder.Services.AddScoped<GetShortenedUrlsQueryHandler>();
         return builder;
     }
 

@@ -38,12 +38,23 @@ handler, logger) =>
         };
     }
 
+    public static Func<GetShortenedUrlsQueryHandler, ILogger, Task<IResult>> GetAll()
+    {
+        return async (handler, logger) =>
+        {
+            var allUrls = await handler.Handle();
+
+            return Results.Ok(allUrls);
+        };
+    }
+
     public static Func<Code, IUrlShorteningService, ILogger, Task<IResult>> DeleteByCode()
     {
         return async (code,
 urlShorteningService, logger) =>
         {
-            if (string.IsNullOrWhiteSpace(await urlShorteningService.GetUrlFromCode(code)))
+            var record = await urlShorteningService.GetUrlFromCode(code);
+            if (string.IsNullOrWhiteSpace(record))
             {
                 return Results.NotFound();
             }
