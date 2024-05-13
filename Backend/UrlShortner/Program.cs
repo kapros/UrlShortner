@@ -1,5 +1,3 @@
-// based on https://www.milanjovanovic.tech/blog/how-to-build-a-url-shortener-with-dotnet
-
 using Asp.Versioning;
 using Asp.Versioning.Builder;
 using UrlShortner.Shorten.Endpoints;

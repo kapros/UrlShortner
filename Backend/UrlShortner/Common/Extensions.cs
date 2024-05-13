@@ -125,9 +125,3 @@ public static class Extensions
         return app;
     }
 }
-
-/*
-    https://www.milanjovanovic.tech/blog/lightweight-in-memory-message-bus-using-dotnet-channels
-    https://www.milanjovanovic.tech/blog/using-masstransit-with-rabbitmq-and-azure-service-bus
-    https://www.milanjovanovic.tech/blog/value-objects-in-dotnet-ddd-fundamentals
-*/
