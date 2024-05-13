@@ -34,7 +34,7 @@ export function AllLinks() {
         { 
             data.length > 0 ? 
                 data.map((link) => (
-                <div className="container-links" key={link.code}>
+                <div className="container-links" key={link.code} data-test-id="link">
                     <div>
                         <a href={link.longLink} target="_blank">{ link.longLink }</a> 
                     </div>
@@ -46,7 +46,7 @@ export function AllLinks() {
                 </div> 
                 ))
             :
-                <div>
+                <div data-test-id="no-links">
                     No links yet!
                 </div>
         }

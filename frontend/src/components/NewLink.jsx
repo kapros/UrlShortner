@@ -27,7 +27,7 @@ export function NewLink() {
         <div className="container">
         <div>Insert a link to get a shorter version:
         <form onSubmit={handleSubmit(createLink)}>
-            <input type="url" name="url" {...register("url")} placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
+            <input data-test-id="links-input" type="url" name="url" {...register("url")} placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
             <button type="submit">Shorten!</button>
         </form>
         </div>
@@ -37,7 +37,7 @@ export function NewLink() {
             <div>
                 <span>Short link:</span>
                 <div>
-                <a href={data.shortUrl} target="_blank">{ data.shortUrl }</a> 
+                <a href={data.shortUrl} target="_blank" data-test-id="short-link" >{ data.shortUrl }</a> 
                 </div>
                 <div> 
                     <button className="btn" onClick={copyToClipboard}>Copy to clipboard</button> 
