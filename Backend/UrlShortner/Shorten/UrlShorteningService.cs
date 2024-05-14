@@ -1,6 +1,4 @@
-﻿using UrlShortner.Domain;
-
-namespace UrlShortner.Shorten;
+﻿namespace UrlShortner.Shorten;
 
 public class UrlShorteningService : IUrlShorteningService
 {

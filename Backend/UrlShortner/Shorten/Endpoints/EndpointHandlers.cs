@@ -1,6 +1,4 @@
-﻿using UrlShortner.Domain;
-
-namespace UrlShortner.Shorten.Endpoints;
+﻿namespace UrlShortner.Shorten.Endpoints;
 
 public static class EndpointHandlers
 {

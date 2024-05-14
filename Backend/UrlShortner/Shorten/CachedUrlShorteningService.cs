@@ -1,7 +1,4 @@
 ﻿
-using Microsoft.Extensions.Caching.Memory;
-using UrlShortner.Domain;
-
 namespace UrlShortner.Shorten;
 
 public class CachedUrlShorteningService : IUrlShorteningService

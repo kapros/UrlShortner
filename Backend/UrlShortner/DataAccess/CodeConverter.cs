@@ -1,6 +1,4 @@
-﻿using UrlShortner.Domain;
-
-namespace UrlShortner.DataAccess;
+﻿namespace UrlShortner.DataAccess;
 
 public class CodeConverter : ValueConverter<Code, string>
 {

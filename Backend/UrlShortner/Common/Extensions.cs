@@ -1,12 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
-using UrlShortner.DataAccess;
-using UrlShortner.Jobs;
-using UrlShortner.Shorten;
 
 namespace UrlShortner.Common;
 

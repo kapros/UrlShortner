@@ -1,6 +1,4 @@
-﻿
-
-namespace UrlShortner.Shorten.Endpoints;
+﻿namespace UrlShortner.Shorten.Endpoints;
 
 public class GetShortLinkEndpoint : IEndpoint
 {

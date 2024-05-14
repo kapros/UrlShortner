@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-
-namespace UrlShortner.Domain;
+﻿namespace UrlShortner.Domain;
 
 public readonly record struct Link(string url)
 {
