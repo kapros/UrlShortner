@@ -30,27 +30,27 @@ export function AllLinks() {
 
     return (  
         <>        
-        <div className="links">
-        { 
-            data.length > 0 ? 
-                data.map((link) => (
-                <div className="container-links" key={link.code} data-test-id="link">
-                    <div>
-                        <a href={link.longLink} target="_blank">{ link.longLink }</a> 
+            <div className="links">
+            { 
+                data.length > 0 ? 
+                    data.map((link) => (
+                    <div className="container-links" key={link.code} data-test-id="link">
+                        <div>
+                            <a href={link.longLink} target="_blank">{ link.longLink }</a> 
+                        </div>
+                        <div>Short link:</div>
+                        <div className="short-link">
+                            <a href={link.shortLink} target="_blank">{ link.shortLink }</a> 
+                            <button className="btn" onClick={() => deleteLink(link.code)}>Delete</button> 
+                        </div>
+                    </div> 
+                    ))
+                :
+                    <div data-test-id="no-links">
+                        No links yet!
                     </div>
-                    <div>Short link:</div>
-                    <div className="short-link">
-                        <a href={link.shortLink} target="_blank">{ link.shortLink }</a> 
-                        <button className="btn" onClick={() => deleteLink(link.code)}>Delete</button> 
-                    </div>
-                </div> 
-                ))
-            :
-                <div data-test-id="no-links">
-                    No links yet!
-                </div>
-        }
-        </div>
+            }
+            </div>
         </>
     )
 }

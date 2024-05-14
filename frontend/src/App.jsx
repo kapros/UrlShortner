@@ -7,15 +7,16 @@ import './App.css'
 function App() {
 
   return (
-    <><BrowserRouter>
-    <Routes>
-    <Route path="/" element={<Home/>}>
-      <Route path="all-links" element={<AllLinks/>} />
-      <Route path="new" element={<NewLink/>} />
-      <Route path="*" element={<Navigate to="/" />} />
-      </Route>
-    </Routes>
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home/>}>
+            <Route path="all-links" element={<AllLinks/>} />
+            <Route path="new" element={<NewLink/>} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
