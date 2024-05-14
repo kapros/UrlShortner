@@ -1,6 +1,6 @@
 import { Link, Outlet } from "react-router-dom";
 
-export function Home() {
+function Home() {
     return <>
                 <div className="navbar">
                     <button>
@@ -15,3 +15,5 @@ export function Home() {
 
         
 }
+
+export default Home;

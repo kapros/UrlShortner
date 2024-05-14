@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import axios from "axios";
 
-export function NewLink() {
+function NewLink() {
     const { register, handleSubmit } = useForm();
     const [data, setData] = useState(null);
     
@@ -48,3 +48,5 @@ export function NewLink() {
         </>
     )
 }
+
+export default NewLink;

@@ -3,7 +3,7 @@ import { reqHeaders } from "../utils/HttpHelpers";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export function AllLinks() {
+function AllLinks() {
     const [data, setData] = useState([]);
     
     const deleteLink = async (short) => {
@@ -54,3 +54,5 @@ export function AllLinks() {
         </>
     )
 }
+
+export default AllLinks;
