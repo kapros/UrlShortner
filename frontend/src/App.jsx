@@ -1,6 +1,6 @@
-import { NewLink } from './components/NewLink';
-import { AllLinks } from './components/LinksList';
-import { Home } from './components/Home';
+import NewLink from './components/NewLink';
+import AllLinks from './components/LinksList';
+import Home from './components/Home';
 import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom"
 import './App.css'
 
