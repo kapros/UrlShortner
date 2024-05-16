@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using Asp.Versioning.Builder;
+using Microsoft.Extensions.Options;
 using UrlShortner.Shorten.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,10 +20,16 @@ if (!builder.Environment.IsDevelopment())
 {
     builder.RegisterStaleUrlsDeletingService();
 }
-
 builder.RegisterHandlers();
 
-builder.Services.AddCors();
+var corsPolicyName = "localfrontend";
+
+builder.Services.AddCors(options => 
+    options.AddPolicy(name: corsPolicyName,
+    policy =>
+    {
+        policy.WithOrigins("https://localhost:5173/");
+    }));
 builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddEndpoints(typeof(Program).Assembly);
@@ -47,7 +54,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-app.UseCors();
+
+app.UseCors(corsPolicyName);
 app.UseSerilogRequestLogging();
 
 var apiVersionSet = app.NewApiVersionSet()
