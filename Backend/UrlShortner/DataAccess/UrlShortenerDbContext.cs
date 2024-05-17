@@ -16,7 +16,6 @@ public class UrlShortenerDbContext : DbContext
             builder
                 .Property(shortUrl => shortUrl.Code)
                 .HasMaxLength(ShortUrlSettings.Length)
-                //.HasConversion<string>()
                 .HasConversion(new CodeConverter())
                 .HasMaxLength(10);
 
