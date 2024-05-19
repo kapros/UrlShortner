@@ -13,6 +13,7 @@ public class CreatingShortUrlsTests : IClassFixture<AspireTestBase>, IDisposable
         _appHost = test.App;
 
         _client = _appHost.CreateHttpClient("shortener");
+        _client.BaseAddress = new Uri(_client.BaseAddress.AbsoluteUri + "api/v1/");
     }
 
     public void Dispose()
@@ -23,7 +24,7 @@ public class CreatingShortUrlsTests : IClassFixture<AspireTestBase>, IDisposable
     [Fact]
     public async Task PostShouldCreateShortLink()
     {
-        var response = await _client.PostAsync("api/v1/shorten", JsonContent.Create(new { url = "https://test.com" }));
+        var response = await _client.PostAsync("shorten", JsonContent.Create(new { url = "https://test.com" }));
         var content = await response.Content.ReadAsStringAsync();
         string shortUrl = JsonConvert.DeserializeObject<dynamic>(content).shortUrl;
         Assert.NotEqual("https://test.com", shortUrl);
