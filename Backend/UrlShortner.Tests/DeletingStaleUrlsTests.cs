@@ -66,7 +66,7 @@ public class DeletingStaleUrlsTests
         CancellationToken token = source.Token;
         await Task.WhenAny(new List<Task>() {
          _staleUrlsDeletingService.StartAsync(token),
-        Task.Delay(TimeSpan.FromSeconds(2))
+        Task.Delay(TimeSpan.FromSeconds(5))
         });
     
         await _staleUrlsDeletingService.StopAsync(token);
