@@ -23,12 +23,11 @@ if (!builder.Environment.IsDevelopment())
 builder.RegisterHandlers();
 
 var corsPolicyName = "localfrontend";
-
 builder.Services.AddCors(options => 
     options.AddPolicy(name: corsPolicyName,
     policy =>
     {
-        policy.WithOrigins("https://localhost:5173/");
+        policy.AllowAnyOrigin();
     }));
 builder.Configuration.AddEnvironmentVariables();
 

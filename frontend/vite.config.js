@@ -35,8 +35,12 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
     }
 }
 
-const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
-    env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:7194';
+const target = 
+    env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
+    env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 
+    env.services__shortener__https__0 ? env.services__shortener__https__0 : 
+    env.services__shortener__http__0 ? env.services__shortener__http__0 : 
+    'https://localhost:7194';
 
 export default defineConfig({
     plugins: [plugin()],

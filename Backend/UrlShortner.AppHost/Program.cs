@@ -10,10 +10,9 @@ var cache = builder.AddRedis("redis")
     .WithRedisCommander()
     .WithDataVolume();
 
-
 var urlApi = builder.AddProject<Projects.UrlShortner>("shortener");
 
-builder.AddNpmApp("react", "../../frontend", "dev")
+var frontend = builder.AddNpmApp("frontend", "../../frontend", "dev")
     .WithReference(urlApi)
     .WithEnvironment("BROWSER", "none")
     .WithHttpsEndpoint( env: "PORT")
@@ -21,3 +20,4 @@ builder.AddNpmApp("react", "../../frontend", "dev")
     .PublishAsDockerFile();
 
 builder.Build().Run();
+

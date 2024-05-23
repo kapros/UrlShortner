@@ -25,8 +25,9 @@ function NewLink() {
     return (  
         <>
             <div className="container">
-                <div>Insert a link to get a shorter version:
+                <div>
                 <form onSubmit={handleSubmit(createLink)}>
+                    <label htmlFor="url">Insert a link to get a shorter version:</label>
                     <input data-test-id="links-input" type="url" name="url" {...register("url")} placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
                     <button type="submit">Shorten!</button>
                 </form>

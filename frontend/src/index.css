@@ -54,6 +54,11 @@ h1 {
   margin: 0.2em;
 }
 
+label {
+  display: block;
+  margin-bottom: 0.5em;
+}
+
 input {
   height: 2.2em;
   padding: 0.3em 0.5em;
