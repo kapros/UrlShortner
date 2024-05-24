@@ -60,13 +60,11 @@ public class DeletingStaleUrlsTests
     [Fact]
     public async Task PurgesStaleUrls()
     {
-        // hacky way to gracefully invoke a cancellation
-        // todo: look for better handling of start/stop so it actually does its job
         CancellationTokenSource source = new CancellationTokenSource();
-        CancellationToken token = source.Token;
-        await Task.WhenAny(new List<Task>() {
+        CancellationToken token = source.Token; // can probably drop
+        await Task.WhenAll(new List<Task>() {
          _staleUrlsDeletingService.StartAsync(token),
-        Task.Delay(TimeSpan.FromSeconds(5))
+        Task.Delay(TimeSpan.FromSeconds(10))
         });
     
         await _staleUrlsDeletingService.StopAsync(token);
